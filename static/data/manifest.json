@@ -1,0 +1,26 @@
+{
+  "real_robot": [
+    {
+      "id": "real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1",
+      "benchmark": "robomolmo_princeton",
+      "task": "banana_plate",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "robomolmo_princeton/banana_plate",
+      "text": "yellow banana",
+      "rgb_url": "videos/real_robot/real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__1",
+      "benchmark": "workroom_v1",
+      "task": "blue_mug_box",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "workroom_v1/blue_mug_box",
+      "text": "blue ceramic coffee mug",
+      "rgb_url": "videos/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__1.json"
+    }
+  ]
+}

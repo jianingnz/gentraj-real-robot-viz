@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenTraj Visualization</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+:root {
+  --bg: #111; --bg-card: #161616; --bg-header: #1a1a1a; --bg-body: #0d0d0d;
+  --border: #222; --border-hover: #444;
+  --text: #d4d4d4; --text-heading: #f0f0f0; --text-secondary: #777; --text-muted: #555;
+  --tab-active: #f0f0f0; --tab-inactive: #666;
+  --scrollbar-track: #1a1a1a; --scrollbar-thumb: #333;
+}
+[data-theme="light"] {
+  --bg: #f5f5f0; --bg-card: #ffffff; --bg-header: #f0efe8; --bg-body: #eeeee8;
+  --border: #ddd; --border-hover: #bbb;
+  --text: #333; --text-heading: #111; --text-secondary: #666; --text-muted: #999;
+  --tab-active: #111; --tab-inactive: #999;
+  --scrollbar-track: #e8e8e8; --scrollbar-thumb: #ccc;
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+  transition: background 0.25s, color 0.25s;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+.page { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+
+.theme-toggle {
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-secondary); border-radius: 20px;
+  padding: 6px 14px; font-size: 0.72rem; font-family: inherit;
+  cursor: pointer; transition: all 0.15s;
+}
+.theme-toggle:hover { border-color: var(--border-hover); color: var(--text); }
+
+.masthead {
+  padding: 40px 0 20px; border-bottom: 1px solid var(--border);
+  margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between;
+}
+.masthead-left { flex: 1; }
+.masthead h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.4rem; font-weight: 700; color: var(--text-heading); letter-spacing: -0.02em;
+}
+.masthead .subtitle { font-size: 0.95rem; color: var(--text-secondary); margin-top: 6px; font-weight: 300; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.tab {
+  padding: 12px 24px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--tab-inactive); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; user-select: none;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--tab-active); border-bottom-color: var(--tab-active); }
+.tab .count { font-size: 0.65rem; color: var(--text-muted); margin-left: 6px; font-weight: 400; }
+.tab.active .count { color: var(--text-secondary); }
+
+/* Group cards (task/participant selectors) */
+.group-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px; margin-bottom: 32px;
+}
+.group-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.group-card:hover { border-color: var(--border-hover); background: var(--bg-header); }
+.group-card .group-name {
+  font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 2px;
+}
+.group-card .group-count { font-size: 0.7rem; color: var(--text-muted); }
+
+/* Back button */
+.back-btn {
+  display: inline-block; padding: 8px 16px; margin-bottom: 16px;
+  background: var(--bg-header); border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-secondary); font-size: 0.78rem; cursor: pointer;
+  transition: background 0.15s, color 0.15s; font-family: inherit;
+}
+.back-btn:hover { background: var(--bg-card); color: var(--text); }
+
+/* Stacked clip view */
+.stacked-header {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.5rem; font-weight: 700; color: var(--text-heading);
+  margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+
+.clip-block {
+  margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border);
+}
+.clip-block:last-child { border-bottom: none; }
+.clip-annotation {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem; color: var(--text-heading); font-weight: 400;
+  margin-bottom: 4px; line-height: 1.4;
+}
+.clip-meta {
+  font-size: 0.7rem; color: var(--text-muted); margin-bottom: 12px;
+  font-family: 'SF Mono', monospace;
+}
+
+.viz-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.viz-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--bg-header);
+}
+.card-title { font-size: 0.65rem; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.1em; text-transform: uppercase; }
+.card-hint { font-size: 0.6rem; color: var(--text-muted); }
+.viz-body {
+  position: relative; aspect-ratio: 16 / 10; background: var(--bg-body);
+  display: flex; align-items: center; justify-content: center;
+}
+.viz-body video { width: 100%; height: 100%; object-fit: contain; }
+.viz-body .canvas2d {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 5;
+}
+.viz-body canvas { width: 100%; height: 100%; }
+
+.playback-bar {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  background: var(--bg-header); border-top: 1px solid var(--border);
+}
+.playback-bar button {
+  background: none; border: 1px solid var(--border); color: var(--text);
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.playback-bar button:hover { background: var(--bg-card); }
+.playback-bar input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 3px; background: #333; border-radius: 2px; outline: none;
+}
+.playback-bar input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px;
+  border-radius: 50%; background: #ccc; cursor: pointer;
+}
+.frame-label {
+  font-size: 0.65rem; color: var(--text-muted); min-width: 45px;
+  text-align: right; font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+
+.loading-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.8rem;
+}
+
+.footer {
+  padding: 24px 0; border-top: 1px solid var(--border);
+  text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 24px;
+}
+
+@media (max-width: 800px) {
+  .viz-row { grid-template-columns: 1fr; }
+  .masthead h1 { font-size: 1.6rem; }
+  .group-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="masthead-left">
+      <h1>GenTraj Visualization</h1>
+      <p class="subtitle">Interactive 3D trajectory viewer across EgoDex, HD-EPIC, Xperience, MammalNet, and HOT3D datasets</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">Light Mode</button>
+  </header>
+
+  <div class="tabs" id="tabBar"></div>
+
+  <!-- Level 1: group cards -->
+  <div id="groupView">
+    <div class="group-grid" id="groupGrid"></div>
+  </div>
+
+  <!-- Level 2: stacked clips -->
+  <div id="stackView" style="display:none">
+    <button class="back-btn" onclick="backToGroups()">&larr; Back</button>
+    <div class="stacked-header" id="stackHeader"></div>
+    <div id="stackList"></div>
+  </div>
+
+  <footer class="footer">GenTraj &middot; EgoDex &middot; HD-EPIC &middot; Xperience &middot; MammalNet &middot; HOT3D</footer>
+</div>
+
+<script>
+// ============================================================
+// State
+// ============================================================
+let manifest = null;
+let activeTab = 'egodex';
+// Per-clip viewer instances: { video, canvas2d, ctx2d, scene, camera, renderer, clipData, ... }
+const viewers = {};
+const TRAIL_2D = 8, TRAIL_3D = 12, CAM_TRAIL = 20;
+// HOT3D gets longer, more visible trails (no camera/pointcloud so tracks are the main visual)
+const HOT3D_TRAIL_2D = 40, HOT3D_TRAIL_3D = 40;
+
+// ============================================================
+// Color helpers — Ai2 brand pink for all tracks
+// ============================================================
+const AI2_PINK_HEX = '#E7A2DE';  // Ai2 Varnish F2 — soft fuchsia
+const AI2_PINK_RGB = {r: 0xE7/255, g: 0xA2/255, b: 0xDE/255};
+
+// Ai2 multi-object palette (for HOT3D per-object coloring)
+const AI2_PALETTE_HEX = ['#f0529c', '#b11bE8', '#0fcb8c', '#105257', '#0a3235', '#faf2e9'];
+const AI2_PALETTE_RGB = AI2_PALETTE_HEX.map(hex => hexToRGB(hex));
+
+function hexToRGB(hex) {
+  const r = parseInt(hex.slice(1,3),16)/255;
+  const g = parseInt(hex.slice(3,5),16)/255;
+  const b = parseInt(hex.slice(5,7),16)/255;
+  return {r, g, b};
+}
+
+// Single color for all tracks
+function trackPalette(N) {
+  const c = [];
+  for (let i = 0; i < N; i++) c.push(AI2_PINK_HEX);
+  return c;
+}
+function trackPaletteRGB(N) {
+  const c = [];
+  for (let i = 0; i < N; i++) c.push(AI2_PINK_RGB);
+  return c;
+}
+
+// Per-object color palette — all pink
+const OBJECT_COLORS_RGB = [AI2_PINK_RGB];
+function objectPaletteRGB(N, objectSizes) {
+  const c = [];
+  for (let i = 0; i < N; i++) c.push(AI2_PINK_RGB);
+  return c;
+}
+
+// HOT3D per-track coloring: cycle through Ai2 palette
+function hot3dPaletteHex(N) {
+  const c = [];
+  for (let i = 0; i < N; i++) c.push(AI2_PALETTE_HEX[i % AI2_PALETTE_HEX.length]);
+  return c;
+}
+function hot3dPaletteRGB(N) {
+  const c = [];
+  for (let i = 0; i < N; i++) c.push(AI2_PALETTE_RGB[i % AI2_PALETTE_RGB.length]);
+  return c;
+}
+
+// ============================================================
+// Catmull-Rom spline interpolation for smooth tracks
+// ============================================================
+function catmullRom(p0, p1, p2, p3, t) {
+  // Centripetal Catmull-Rom with alpha=0.5
+  const t2 = t * t, t3 = t2 * t;
+  return 0.5 * (
+    (2 * p1) +
+    (-p0 + p2) * t +
+    (2*p0 - 5*p1 + 4*p2 - p3) * t2 +
+    (-p0 + 3*p1 - 3*p2 + p3) * t3
+  );
+}
+
+function interpolateSpline2D(points, subdivisions) {
+  // points: array of [x, y], returns denser array of [x, y]
+  if (points.length < 2) return points;
+  const result = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[Math.min(points.length - 1, i + 2)];
+    for (let s = 0; s < subdivisions; s++) {
+      const t = s / subdivisions;
+      result.push([
+        catmullRom(p0[0], p1[0], p2[0], p3[0], t),
+        catmullRom(p0[1], p1[1], p2[1], p3[1], t)
+      ]);
+    }
+  }
+  result.push(points[points.length - 1]);
+  return result;
+}
+
+function interpolateSpline3D(points, subdivisions) {
+  // points: array of [x, y, z], returns denser flat Float32Array
+  if (points.length < 2) {
+    const arr = new Float32Array(points.length * 3);
+    for (let i = 0; i < points.length; i++) {
+      arr[i*3] = points[i][0]; arr[i*3+1] = points[i][1]; arr[i*3+2] = points[i][2];
+    }
+    return arr;
+  }
+  const result = [];
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[Math.min(points.length - 1, i + 2)];
+    for (let s = 0; s < subdivisions; s++) {
+      const t = s / subdivisions;
+      result.push(
+        catmullRom(p0[0], p1[0], p2[0], p3[0], t),
+        catmullRom(p0[1], p1[1], p2[1], p3[1], t),
+        catmullRom(p0[2], p1[2], p2[2], p3[2], t)
+      );
+    }
+  }
+  const last = points[points.length - 1];
+  result.push(last[0], last[1], last[2]);
+  return new Float32Array(result);
+}
+
+// ============================================================
+// Theme
+// ============================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  document.getElementById('themeToggle').textContent = isLight ? 'Light Mode' : 'Dark Mode';
+  localStorage.setItem('theme', isLight ? 'dark' : 'light');
+  // Update all renderers
+  for (const id in viewers) {
+    const v = viewers[id];
+    if (v.renderer) {
+      v.renderer.setClearColor(isLight ? 0x0d0d0d : 0xeeeee8);
+      renderViewer(id);
+    }
+  }
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+})();
+
+// ============================================================
+// Navigation
+// ============================================================
+async function init() {
+  const resp = await fetch('static/data/manifest.json');
+  manifest = await resp.json();
+  buildTabs();
+  showTab('egodex');
+  if (document.documentElement.getAttribute('data-theme') === 'light')
+    document.getElementById('themeToggle').textContent = 'Dark Mode';
+}
+
+function buildTabs() {
+  const bar = document.getElementById('tabBar');
+  const datasets = [['egodex','EgoDex'],['hdepic','HD-EPIC'],['xperience','Xperience'],['mammalnet','MammalNet'],['hot3d','HOT3D'],['real_robot','Real Robot']];
+  bar.innerHTML = '';
+  for (const [key, label] of datasets) {
+    const n = (manifest[key] || []).length;
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (key === activeTab ? ' active' : '');
+    tab.dataset.key = key;
+    tab.innerHTML = label + '<span class="count">' + n + '</span>';
+    tab.onclick = () => showTab(key);
+    bar.appendChild(tab);
+  }
+}
+
+function showTab(key) {
+  activeTab = key;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.key === key);
+  });
+  // Xperience/HOT3D: skip group view, go straight to stacked
+  if (key === 'xperience') {
+    showStack('All Clips', manifest.xperience);
+  } else if (key === 'hot3d') {
+    showStack('HOT3D Clips', manifest.hot3d);
+  } else {
+    showGroups();
+  }
+}
+
+function showGroups() {
+  cleanupViewers();
+  document.getElementById('groupView').style.display = '';
+  document.getElementById('stackView').style.display = 'none';
+
+  const grid = document.getElementById('groupGrid');
+  grid.innerHTML = '';
+  const clips = manifest[activeTab] || [];
+
+  const groups = {};
+  for (const c of clips) {
+    const g = c.group || c.task || c.participant || 'clips';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(c);
+  }
+
+  for (const [name, items] of Object.entries(groups).sort()) {
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.innerHTML =
+      '<div class="group-name">' + name.replace(/_/g, ' ') + '</div>' +
+      '<div class="group-count">' + items.length + ' clips</div>';
+    card.onclick = () => showStack(name.replace(/_/g, ' '), items);
+    grid.appendChild(card);
+  }
+}
+
+function showStack(title, clips) {
+  cleanupViewers();
+  document.getElementById('groupView').style.display = 'none';
+  document.getElementById('stackView').style.display = '';
+  document.getElementById('stackHeader').textContent = title;
+
+  const list = document.getElementById('stackList');
+  list.innerHTML = '';
+
+  for (let i = 0; i < clips.length; i++) {
+    const c = clips[i];
+    const id = 'clip_' + i;
+    const block = document.createElement('div');
+    block.className = 'clip-block';
+    block.id = id;
+    block.innerHTML = `
+      <div class="clip-annotation">${c.text || 'No annotation'}${
+        c.objects && c.objects.length ? '<span style="margin-left:12px">' +
+          c.objects.map((o,oi) => {
+            const dotColor = activeTab === 'hot3d' ? AI2_PALETTE_HEX[oi % AI2_PALETTE_HEX.length] : AI2_PINK_HEX;
+            return '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+dotColor+';margin:0 4px 0 8px;vertical-align:middle"></span><span style="font-size:0.75rem;vertical-align:middle">'+o+'</span>';
+          }).join('') + '</span>' : ''
+      }</div>
+      <div class="clip-meta">${c.id.replace(/__/g, ' / ')}</div>
+      <div class="viz-row">
+        <div class="viz-card">
+          <div class="card-header"><span class="card-title">RGB + 2D Tracks</span></div>
+          <div class="viz-body" id="${id}_rgb">
+            <video id="${id}_video" muted loop></video>
+            <canvas class="canvas2d" id="${id}_c2d"></canvas>
+          </div>
+          <div class="playback-bar">
+            <button id="${id}_pp" onclick="togglePlayV('${id}')">&#9654;</button>
+            <input type="range" id="${id}_scrub" min="0" max="100" value="0" oninput="scrubV('${id}',this.value)">
+            <span class="frame-label" id="${id}_fl">0/0</span>
+          </div>
+        </div>
+        <div class="viz-card">
+          <div class="card-header">
+            <span class="card-title">3D Scene</span>
+            <span class="card-hint">drag rotate &middot; scroll zoom</span>
+          </div>
+          <div class="viz-body" id="${id}_3d">
+            <div class="loading-placeholder" id="${id}_loading">Scroll to load</div>
+            <canvas id="${id}_canvas3d" style="display:none"></canvas>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(block);
+
+    // Store clip info + dataset for per-dataset styling
+    viewers[id] = { clip: c, loaded: false, dataset: activeTab };
+  }
+
+  // Lazy load with IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        if (viewers[id] && !viewers[id].loaded) {
+          viewers[id].loaded = true;
+          initClipViewer(id);
+        }
+      }
+    }
+  }, { rootMargin: '200px' });
+
+  for (let i = 0; i < clips.length; i++) {
+    observer.observe(document.getElementById('clip_' + i));
+  }
+}
+
+function backToGroups() {
+  cleanupViewers();
+  if (activeTab === 'xperience' || activeTab === 'hot3d') {
+    // Xperience/HOT3D have no group level, go back to egodex
+    showTab('egodex');
+  } else {
+    showGroups();
+  }
+}
+
+function cleanupViewers() {
+  for (const id in viewers) {
+    const v = viewers[id];
+    if (v._rafId) cancelAnimationFrame(v._rafId);
+    if (v.video) { v.video.pause(); v.video.src = ''; }
+    if (v.renderer) { v.renderer.dispose(); }
+  }
+  for (const id in viewers) delete viewers[id];
+}
+
+// ============================================================
+// Per-clip viewer
+// ============================================================
+async function initClipViewer(id) {
+  const v = viewers[id];
+  const c = v.clip;
+
+  // Setup video
+  v.video = document.getElementById(id + '_video');
+  v.canvas2d = document.getElementById(id + '_c2d');
+  v.ctx2d = v.canvas2d.getContext('2d');
+
+  v.video.src = c.rgb_url;
+  v.video.load();
+  v.video.play();
+  document.getElementById(id + '_pp').innerHTML = '&#9646;&#9646;';
+
+  // Video sync via requestAnimationFrame for smooth, high-fps updates
+  v._lastFrameIdx = -1;
+  v._rafId = null;
+  function rafLoop() {
+    v._rafId = requestAnimationFrame(rafLoop);
+    if (!v.video || v.video.paused || !v.video.duration || !v.clipData) return;
+    let T = 0;
+    if (v.clipData.pts3d) T = v.clipData.pts3d[0].length;
+    else if (v.clipData.tracks2d) T = v.clipData.tracks2d.length;
+    if (T === 0) return;
+    const progress = v.video.currentTime / v.video.duration;
+    const pct = progress * 100;
+    // Continuous fractional frame for interpolation
+    const fracFrame = progress * Math.max(T - 1, 0);
+    const fi = Math.round(fracFrame);
+    document.getElementById(id + '_scrub').value = pct;
+    document.getElementById(id + '_fl').textContent = fi + '/' + T;
+    // Always redraw with fractional frame for smooth interpolation
+    draw2DViewer(id, fracFrame);
+    draw3DFrame(id, fracFrame);
+    v._lastFrameIdx = fi;
+  }
+  rafLoop();
+  // Also handle scrub / pause-seek via timeupdate as fallback
+  v.video.addEventListener('timeupdate', () => {
+    if (!v.video || !v.video.duration || !v.clipData) return;
+    if (v.video.paused) {
+      let T = 0;
+      if (v.clipData.pts3d) T = v.clipData.pts3d[0].length;
+      else if (v.clipData.tracks2d) T = v.clipData.tracks2d.length;
+      const progress = v.video.currentTime / v.video.duration;
+      const fracFrame = progress * Math.max(T - 1, 0);
+      const fi = Math.round(fracFrame);
+      document.getElementById(id + '_scrub').value = progress * 100;
+      document.getElementById(id + '_fl').textContent = fi + '/' + T;
+      draw2DViewer(id, fracFrame);
+      draw3DFrame(id, fracFrame);
+    }
+  });
+
+  // Load 3D data
+  document.getElementById(id + '_loading').textContent = 'Loading...';
+  try {
+    // Static site: data_url already points at the per-clip JSON file.
+    const resp = await fetch(c.data_url);
+    v.clipData = await resp.json();
+    // Init 3D
+    document.getElementById(id + '_loading').style.display = 'none';
+    document.getElementById(id + '_canvas3d').style.display = '';
+    init3DViewer(id);
+  } catch(e) {
+    document.getElementById(id + '_loading').textContent = 'Error: ' + e.message;
+  }
+}
+
+function togglePlayV(id) {
+  const v = viewers[id];
+  if (!v || !v.video) return;
+  if (v.video.paused) { v.video.play(); document.getElementById(id+'_pp').innerHTML = '&#9646;&#9646;'; }
+  else { v.video.pause(); document.getElementById(id+'_pp').innerHTML = '&#9654;'; }
+}
+function scrubV(id, val) {
+  const v = viewers[id];
+  if (v && v.video && v.video.duration) v.video.currentTime = (val / 100) * v.video.duration;
+}
+
+// ============================================================
+// 3D per-viewer
+// ============================================================
+function init3DViewer(id) {
+  const v = viewers[id];
+  const canvas = document.getElementById(id + '_canvas3d');
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  v.renderer = new THREE.WebGLRenderer({canvas, antialias: true});
+  v.renderer.setClearColor(isLight ? 0xeeeee8 : 0x0d0d0d);
+  v.scene = new THREE.Scene();
+  v.camera = new THREE.PerspectiveCamera(50, 1, 0.01, 500);
+  v.camYaw = 0; v.camPitch = 0;
+  v.camTarget = new THREE.Vector3(); v.camDist = 3;
+  v.isDragging = false; v.prevMouse = {x:0,y:0};
+
+  canvas.addEventListener('mousedown', e => {
+    v.isDragging = true; v.prevMouse = {x: e.clientX, y: e.clientY};
+    activeViewerId = id;
+  });
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+  window.addEventListener('mouseup', () => { v.isDragging = false; });
+  canvas.addEventListener('mousemove', e => {
+    if (!v.isDragging) return;
+    v.camYaw -= (e.clientX - v.prevMouse.x) * 0.005;
+    v.camPitch -= (e.clientY - v.prevMouse.y) * 0.005;
+    v.camPitch = Math.max(-Math.PI/2+0.1, Math.min(Math.PI/2-0.1, v.camPitch));
+    v.prevMouse = {x: e.clientX, y: e.clientY};
+    updateOrbit(id);
+  });
+  canvas.addEventListener('wheel', e => {
+    v.camDist = Math.max(0.3, Math.min(30, v.camDist + e.deltaY * 0.01));
+    updateOrbit(id);
+    e.preventDefault();
+  }, {passive: false});
+
+  prepare3DViewer(id);
+}
+
+function updateOrbit(id) {
+  const v = viewers[id];
+  v.camera.position.set(
+    v.camTarget.x + v.camDist * Math.sin(v.camYaw) * Math.cos(v.camPitch),
+    v.camTarget.y + v.camDist * Math.sin(v.camPitch),
+    v.camTarget.z + v.camDist * Math.cos(v.camYaw) * Math.cos(v.camPitch)
+  );
+  v.camera.lookAt(v.camTarget);
+  renderViewer(id);
+}
+
+function renderViewer(id) {
+  const v = viewers[id];
+  if (!v || !v.renderer || !v.scene) return;
+  const box = document.getElementById(id + '_3d');
+  if (!box) return;
+  const w = box.clientWidth, h = box.clientHeight;
+  if (w === 0 || h === 0) return;
+  v.renderer.setSize(w, h);
+  v.camera.aspect = w / h;
+  v.camera.updateProjectionMatrix();
+  v.renderer.render(v.scene, v.camera);
+}
+
+function prepare3DViewer(id) {
+  const v = viewers[id];
+  const cd = v.clipData;
+  if (!cd) return;
+
+  while (v.scene.children.length) v.scene.remove(v.scene.children[0]);
+  v.dynamicGroup = null;
+
+  let allPts = [];
+
+  // Point cloud
+  if (cd.pc_xyz && cd.pc_colors) {
+    const xyz = cd.pc_xyz, cols = cd.pc_colors;
+    const N = xyz.length;
+    const pos = new Float32Array(N*3), col = new Float32Array(N*3);
+    for (let i = 0; i < N; i++) {
+      pos[i*3]=xyz[i][0]; pos[i*3+1]=-xyz[i][1]; pos[i*3+2]=-xyz[i][2];
+      col[i*3]=cols[i][0]/255; col[i*3+1]=cols[i][1]/255; col[i*3+2]=cols[i][2]/255;
+      allPts.push([xyz[i][0], -xyz[i][1], -xyz[i][2]]);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    v.scene.add(new THREE.Points(g, new THREE.PointsMaterial({
+      vertexColors: true, size: 0.008, sizeAttenuation: true, transparent: true, opacity: 0.75
+    })));
+  }
+
+  if (cd.pts3d) {
+    for (let n = 0; n < cd.pts3d.length; n++)
+      for (let t = 0; t < cd.pts3d[n].length; t++)
+        allPts.push([cd.pts3d[n][t][0], -cd.pts3d[n][t][1], -cd.pts3d[n][t][2]]);
+  }
+
+  if (allPts.length === 0) { renderViewer(id); return; }
+
+  const xs = allPts.map(p=>p[0]).filter(v=>isFinite(v)).sort((a,b)=>a-b);
+  const ys = allPts.map(p=>p[1]).filter(v=>isFinite(v)).sort((a,b)=>a-b);
+  const zs = allPts.map(p=>p[2]).filter(v=>isFinite(v)).sort((a,b)=>a-b);
+  if (!xs.length) { renderViewer(id); return; }
+
+  const xmin=xs[Math.floor(xs.length*0.01)], xmax=xs[Math.floor(xs.length*0.99)];
+  const ymin=ys[Math.floor(ys.length*0.01)], ymax=ys[Math.floor(ys.length*0.99)];
+  const zmin=zs[Math.floor(zs.length*0.01)], zmax=zs[Math.floor(zs.length*0.99)];
+  const cx=(xmin+xmax)/2, cy=(ymin+ymax)/2, cz=(zmin+zmax)/2;
+  const interval = Math.max(xmax-xmin, ymax-ymin, zmax-zmin);
+  const half = interval/2*0.75;
+
+  v.sceneMeta = {cx, cy, cz, half, interval};
+
+  const isLt = document.documentElement.getAttribute('data-theme') === 'light';
+  const grid = new THREE.GridHelper(interval*2.4, 20, isLt?0xcccccc:0x333333, isLt?0xdddddd:0x222222);
+  grid.position.set(cx, ys[0], cz);
+  v.scene.add(grid);
+
+  v.camTarget.set(cx, cy, cz);
+  v.camDist = half * 2.0;
+
+  if (cd.cam_fwd) {
+    const cf = cd.cam_fwd[0];
+    const cfd = [cf[0], -cf[1], -cf[2]];
+    v.camYaw = Math.atan2(cfd[0], cfd[2]) + Math.PI * 0.75;
+    v.camPitch = 0.4;
+  } else {
+    v.camYaw = Math.PI * 0.25;
+    v.camPitch = 0.3;
+  }
+  updateOrbit(id);
+  draw3DFrame(id, 0);
+}
+
+function draw3DFrame(id, fracFrame) {
+  const v = viewers[id];
+  if (!v || !v.sceneMeta || !v.clipData) return;
+  const cd = v.clipData;
+  const {cx, cy, cz, half, interval} = v.sceneMeta;
+
+  if (v.dynamicGroup) v.scene.remove(v.dynamicGroup);
+  v.dynamicGroup = new THREE.Group();
+
+  // Helper: lerp a 3D point between two frames
+  function lerpPt(arr, n, f0, f1, frac) {
+    const a = arr[n][f0], b = arr[n][f1];
+    return [a[0]+(b[0]-a[0])*frac, a[1]+(b[1]-a[1])*frac, a[2]+(b[2]-a[2])*frac];
+  }
+
+  // Tracks
+  if (cd.pts3d) {
+    const isHot3d = v.dataset === 'hot3d';
+    const pts = cd.pts3d, vis = cd.vis3d;
+    const N = pts.length, T = pts[0].length;
+    const fi = Math.min(Math.floor(fracFrame), T-1);
+    const fiNext = Math.min(fi + 1, T - 1);
+    const frac = fracFrame - Math.floor(fracFrame);
+    const colorsRGB = isHot3d ? hot3dPaletteRGB(N) : objectPaletteRGB(N, cd.object_sizes);
+    const trail3d = isHot3d ? HOT3D_TRAIL_3D : TRAIL_3D;
+    const lineOpacity = isHot3d ? 1.0 : 0.3;
+    const lineTransparent = !isHot3d;
+    const trailStart = Math.max(0, fi - trail3d);
+    const SPLINE_SUBDIV = 4;
+
+    for (let n = 0; n < N; n++) {
+      const lineColor = new THREE.Color(colorsRGB[n].r, colorsRGB[n].g, colorsRGB[n].b);
+      const lineMat = new THREE.LineBasicMaterial({color: lineColor, transparent: lineTransparent, opacity: lineOpacity});
+      // Collect visible trail points as [x, -y, -z]
+      let seg = [];
+      for (let t = trailStart; t <= fi; t++) {
+        const p = pts[n][t];
+        const vv = vis ? vis[n][t] : true;
+        if (!vv || isNaN(p[0]) || (p[0]===0 && p[1]===0 && p[2]===0)) {
+          if (seg.length >= 2) {
+            const smoothed = interpolateSpline3D(seg, SPLINE_SUBDIV);
+            const g = new THREE.BufferGeometry();
+            g.setAttribute('position', new THREE.Float32BufferAttribute(smoothed, 3));
+            v.dynamicGroup.add(new THREE.Line(g, lineMat));
+          }
+          seg = [];
+        } else { seg.push([p[0], -p[1], -p[2]]); }
+      }
+      // Add interpolated current position to the last segment
+      if (fi < T - 1 && frac > 0) {
+        const vv0 = vis ? vis[n][fi] : true;
+        const vv1 = vis ? vis[n][fiNext] : true;
+        if (vv0 && vv1) {
+          const ip = lerpPt(pts, n, fi, fiNext, frac);
+          if (seg.length > 0) {
+            seg.push([ip[0], -ip[1], -ip[2]]);
+          }
+        }
+      }
+      if (seg.length >= 2) {
+        const smoothed = interpolateSpline3D(seg, SPLINE_SUBDIV);
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.Float32BufferAttribute(smoothed, 3));
+        v.dynamicGroup.add(new THREE.Line(g, lineMat));
+      }
+    }
+
+    // Current points — sample RGB from video (skip for HOT3D, use palette colors)
+    let rgbColors = null;
+    if (!isHot3d && v.video && v.video.videoWidth > 0 && cd.tracks2d) {
+      try {
+        const sc = document.createElement('canvas');
+        const sctx = sc.getContext('2d', {willReadFrequently:true});
+        sc.width = v.video.videoWidth; sc.height = v.video.videoHeight;
+        sctx.drawImage(v.video, 0, 0);
+        const dim = cd.dim;
+        const sx = v.video.videoWidth/dim[1], sy = v.video.videoHeight/dim[0];
+        rgbColors = [];
+        const tracks = cd.tracks2d;
+        for (let n = 0; n < N; n++) {
+          const tv = vis ? vis[n][fi] : true;
+          if (fi < tracks.length && n < tracks[fi].length && tv) {
+            const px = Math.round(tracks[fi][n][0]*sx), py = Math.round(tracks[fi][n][1]*sy);
+            if (px>=0 && px<sc.width && py>=0 && py<sc.height) {
+              const px4 = sctx.getImageData(px,py,1,1).data;
+              rgbColors.push({r:px4[0]/255, g:px4[1]/255, b:px4[2]/255});
+            } else rgbColors.push(null);
+          } else rgbColors.push(null);
+        }
+      } catch(e) { rgbColors = null; }
+    }
+
+    const ptP = [], ptC = [];
+    for (let n = 0; n < N; n++) {
+      // Interpolated current position
+      const vv0 = vis ? vis[n][fi] : true;
+      const vv1 = vis ? vis[n][fiNext] : true;
+      if (!vv0) continue;
+      let px, py, pz;
+      if (fi < T - 1 && frac > 0 && vv1) {
+        const ip = lerpPt(pts, n, fi, fiNext, frac);
+        px = ip[0]; py = -ip[1]; pz = -ip[2];
+      } else {
+        const p = pts[n][fi];
+        if (isNaN(p[0]) || (p[0]===0&&p[1]===0&&p[2]===0)) continue;
+        px = p[0]; py = -p[1]; pz = -p[2];
+      }
+      ptP.push(px, py, pz);
+      const rc = rgbColors && rgbColors[n] ? rgbColors[n] : colorsRGB[n];
+      ptC.push(rc.r, rc.g, rc.b);
+    }
+    if (ptP.length) {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(ptP, 3));
+      g.setAttribute('color', new THREE.Float32BufferAttribute(ptC, 3));
+      const ptSize = isHot3d ? 0.015 : 0.01;
+      v.dynamicGroup.add(new THREE.Points(g, new THREE.PointsMaterial({vertexColors:true, size:ptSize, sizeAttenuation:true})));
+    }
+  }
+
+  // Camera trail + frustum
+  if (cd.cam_pos) {
+    const camPos = cd.cam_pos;
+    const T = camPos.length;
+    const fi = Math.min(Math.floor(fracFrame), T-1);
+    const fiNext = Math.min(fi + 1, T - 1);
+    const frac = fracFrame - Math.floor(fracFrame);
+    const ts = Math.max(0, fi - CAM_TRAIL);
+    const isLt = document.documentElement.getAttribute('data-theme') === 'light';
+    const trailCol = isLt ? 0x444444 : 0xcccccc;
+    const frustCol = isLt ? 0x2266bb : 0x66aaff;
+
+    // Collect camera trail points for spline
+    const camPts = [];
+    for (let t = ts; t <= fi; t++) {
+      const p = camPos[t];
+      if (!isNaN(p[0])) camPts.push([p[0], -p[1], -p[2]]);
+    }
+    // Add interpolated current cam position
+    if (fi < T - 1 && frac > 0 && !isNaN(camPos[fi][0]) && !isNaN(camPos[fiNext][0])) {
+      const a = camPos[fi], b = camPos[fiNext];
+      camPts.push([a[0]+(b[0]-a[0])*frac, -(a[1]+(b[1]-a[1])*frac), -(a[2]+(b[2]-a[2])*frac)]);
+    }
+    if (camPts.length >= 2) {
+      const smoothed = interpolateSpline3D(camPts, 4);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(smoothed, 3));
+      v.dynamicGroup.add(new THREE.Line(g, new THREE.LineBasicMaterial({color:trailCol, transparent:true, opacity:0.7})));
+    }
+
+    // Interpolated camera position for frustum
+    let cpx, cpy, cpz, fwd_r;
+    if (fi < T - 1 && frac > 0 && !isNaN(camPos[fi][0]) && !isNaN(camPos[fiNext][0])) {
+      const a = camPos[fi], b = camPos[fiNext];
+      cpx = a[0]+(b[0]-a[0])*frac; cpy = a[1]+(b[1]-a[1])*frac; cpz = a[2]+(b[2]-a[2])*frac;
+    } else {
+      cpx = camPos[fi][0]; cpy = camPos[fi][1]; cpz = camPos[fi][2];
+    }
+    if (!isNaN(cpx) && cd.cam_fwd) {
+      if (fi < cd.cam_fwd.length - 1 && frac > 0) {
+        const a = cd.cam_fwd[fi], b = cd.cam_fwd[fiNext];
+        fwd_r = [a[0]+(b[0]-a[0])*frac, a[1]+(b[1]-a[1])*frac, a[2]+(b[2]-a[2])*frac];
+      } else {
+        fwd_r = cd.cam_fwd[fi];
+      }
+      const origin = new THREE.Vector3(cpx, -cpy, -cpz);
+      const fwd = new THREE.Vector3(fwd_r[0], -fwd_r[1], -fwd_r[2]).normalize();
+      const wup = new THREE.Vector3(0,1,0);
+      const right = new THREE.Vector3().crossVectors(fwd, wup).normalize();
+      if (right.length() < 0.01) right.set(1,0,0);
+      const up = new THREE.Vector3().crossVectors(right, fwd).normalize();
+      const fd = interval * 0.06;
+      const dim = cd.dim, aspect = dim[1]/dim[0];
+      const hH = fd*0.35, hW = hH*aspect;
+      const c0=origin.clone().add(fwd.clone().multiplyScalar(fd)).add(right.clone().multiplyScalar(-hW)).add(up.clone().multiplyScalar(hH));
+      const c1=origin.clone().add(fwd.clone().multiplyScalar(fd)).add(right.clone().multiplyScalar(hW)).add(up.clone().multiplyScalar(hH));
+      const c2=origin.clone().add(fwd.clone().multiplyScalar(fd)).add(right.clone().multiplyScalar(hW)).add(up.clone().multiplyScalar(-hH));
+      const c3=origin.clone().add(fwd.clone().multiplyScalar(fd)).add(right.clone().multiplyScalar(-hW)).add(up.clone().multiplyScalar(-hH));
+      const fp = [origin,c0,origin,c1,origin,c2,origin,c3,c0,c1,c1,c2,c2,c3,c3,c0];
+      const fg = new THREE.BufferGeometry().setFromPoints(fp);
+      v.dynamicGroup.add(new THREE.LineSegments(fg, new THREE.LineBasicMaterial({color:frustCol, transparent:true, opacity:0.8})));
+
+      // Video texture on frustum
+      if (v.video && v.video.videoWidth > 0) {
+        try {
+          const tc = document.createElement('canvas');
+          tc.width = 128; tc.height = Math.round(128/aspect);
+          tc.getContext('2d').drawImage(v.video, 0, 0, tc.width, tc.height);
+          const tex = new THREE.CanvasTexture(tc);
+          tex.minFilter = THREE.LinearFilter;
+          const pg = new THREE.BufferGeometry();
+          pg.setAttribute('position', new THREE.Float32BufferAttribute([
+            c0.x,c0.y,c0.z, c1.x,c1.y,c1.z, c2.x,c2.y,c2.z,
+            c0.x,c0.y,c0.z, c2.x,c2.y,c2.z, c3.x,c3.y,c3.z], 3));
+          pg.setAttribute('uv', new THREE.Float32BufferAttribute([0,1,1,1,1,0,0,1,1,0,0,0], 2));
+          v.dynamicGroup.add(new THREE.Mesh(pg, new THREE.MeshBasicMaterial({map:tex, side:THREE.DoubleSide, transparent:true, opacity:0.9})));
+        } catch(e) {}
+      }
+    }
+  }
+
+  v.scene.add(v.dynamicGroup);
+  renderViewer(id);
+}
+
+// ============================================================
+// 2D overlay per viewer
+// ============================================================
+function draw2DViewer(id, fracFrame) {
+  const v = viewers[id];
+  if (!v || !v.clipData || !v.clipData.tracks2d) return;
+  const cd = v.clipData;
+  const isHot3d = v.dataset === 'hot3d';
+  const box = document.getElementById(id + '_rgb');
+  if (!box) return;
+  v.canvas2d.width = box.clientWidth;
+  v.canvas2d.height = box.clientHeight;
+  const bw = box.clientWidth, bh = box.clientHeight;
+  const dim = cd.dim, vw = dim[1], vh = dim[0];
+  const scale = Math.min(bw/vw, bh/vh);
+  const rx = (bw-vw*scale)/2, ry = (bh-vh*scale)/2;
+
+  const ctx = v.ctx2d;
+  ctx.clearRect(0, 0, bw, bh);
+  const tracks = cd.tracks2d, vis = cd.vis2d;
+  const T = tracks.length, N = tracks[0].length;
+  const fi = Math.min(Math.floor(fracFrame), T-1);
+  const fiNext = Math.min(fi + 1, T - 1);
+  const frac = fracFrame - Math.floor(fracFrame);
+  const trail2d = isHot3d ? HOT3D_TRAIL_2D : TRAIL_2D;
+  const ts = Math.max(0, fi - trail2d);
+  const SPLINE_SUBDIV = 4;
+  const colorsHex = isHot3d ? hot3dPaletteHex(N) : null;
+
+  for (let n = 0; n < N; n++) {
+    const vv = vis ? vis[fi][n] : true;
+    if (!vv) continue;
+
+    // Collect visible trail points for this track
+    const trailPts = [];
+    const trailAlphas = [];
+    for (let t = ts; t <= fi; t++) {
+      const tv = vis ? vis[t][n] : true;
+      if (!tv || isNaN(tracks[t][n][0])) continue;
+      trailPts.push([tracks[t][n][0], tracks[t][n][1]]);
+      trailAlphas.push((t - ts) / trail2d);
+    }
+    // Add interpolated current position
+    if (fi < T - 1 && frac > 0) {
+      const vn = vis ? vis[fiNext][n] : true;
+      if (vn && !isNaN(tracks[fiNext][n][0])) {
+        const lx = tracks[fi][n][0] + (tracks[fiNext][n][0] - tracks[fi][n][0]) * frac;
+        const ly = tracks[fi][n][1] + (tracks[fiNext][n][1] - tracks[fi][n][1]) * frac;
+        trailPts.push([lx, ly]);
+        trailAlphas.push(1.0);
+      }
+    }
+
+    // Draw spline-smoothed trail
+    const trackColor = isHot3d ? colorsHex[n] : AI2_PINK_HEX;
+    if (trailPts.length >= 2) {
+      const smoothed = interpolateSpline2D(trailPts, SPLINE_SUBDIV);
+      ctx.lineWidth = isHot3d ? 2.0 : 1.5;
+      ctx.strokeStyle = trackColor;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      for (let s = 1; s < smoothed.length; s++) {
+        const alphaIdx = (s / smoothed.length) * (trailAlphas.length - 1);
+        const aFloor = Math.floor(alphaIdx);
+        const aCeil = Math.min(aFloor + 1, trailAlphas.length - 1);
+        const aFrac = alphaIdx - aFloor;
+        const alpha = trailAlphas[aFloor] + (trailAlphas[aCeil] - trailAlphas[aFloor]) * aFrac;
+        // HOT3D: fully opaque; others: faded
+        ctx.globalAlpha = isHot3d ? (0.4 + 0.6 * alpha) : (0.05 + 0.2 * alpha);
+        ctx.beginPath();
+        ctx.moveTo(smoothed[s-1][0]*scale+rx, smoothed[s-1][1]*scale+ry);
+        ctx.lineTo(smoothed[s][0]*scale+rx, smoothed[s][1]*scale+ry);
+        ctx.stroke();
+      }
+    }
+
+    // Current dot
+    let dotX, dotY;
+    if (fi < T - 1 && frac > 0 && (vis ? vis[fiNext][n] : true) && !isNaN(tracks[fiNext][n][0])) {
+      dotX = tracks[fi][n][0] + (tracks[fiNext][n][0] - tracks[fi][n][0]) * frac;
+      dotY = tracks[fi][n][1] + (tracks[fiNext][n][1] - tracks[fi][n][1]) * frac;
+    } else {
+      dotX = tracks[fi][n][0]; dotY = tracks[fi][n][1];
+    }
+    if (isNaN(dotX) || isNaN(dotY)) continue;
+    const sx = dotX*scale+rx, sy = dotY*scale+ry;
+    ctx.globalAlpha = isHot3d ? 1.0 : 0.35;
+    ctx.fillStyle = trackColor;
+    ctx.beginPath();
+    ctx.arc(sx, sy, isHot3d ? 3 : 2, 0, Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// ============================================================
+// WASD movement — applies to the viewer whose canvas was last interacted with
+// ============================================================
+let activeViewerId = null;
+const keysDown = {};
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const k = e.key.toLowerCase();
+  if (['w','a','s','d','q','e','arrowup','arrowdown','arrowleft','arrowright'].includes(k)) {
+    keysDown[k] = true;
+    e.preventDefault();
+  }
+  if (e.key === ' ') {
+    if (activeViewerId) togglePlayV(activeViewerId);
+    e.preventDefault();
+  }
+});
+document.addEventListener('keyup', e => { keysDown[e.key.toLowerCase()] = false; });
+
+(function camMoveLoop() {
+  if (activeViewerId && viewers[activeViewerId]) {
+    const v = viewers[activeViewerId];
+    if (v.camYaw !== undefined) {
+      const speed = 0.03 * v.camDist;
+      const fwdX = -Math.sin(v.camYaw), fwdZ = -Math.cos(v.camYaw);
+      const rightX = Math.cos(v.camYaw), rightZ = -Math.sin(v.camYaw);
+      let moved = false;
+      if (keysDown['w']||keysDown['arrowup']) { v.camTarget.x+=fwdX*speed; v.camTarget.z+=fwdZ*speed; moved=true; }
+      if (keysDown['s']||keysDown['arrowdown']) { v.camTarget.x-=fwdX*speed; v.camTarget.z-=fwdZ*speed; moved=true; }
+      if (keysDown['a']||keysDown['arrowleft']) { v.camTarget.x-=rightX*speed; v.camTarget.z-=rightZ*speed; moved=true; }
+      if (keysDown['d']||keysDown['arrowright']) { v.camTarget.x+=rightX*speed; v.camTarget.z+=rightZ*speed; moved=true; }
+      if (keysDown['q']) { v.camTarget.y-=speed; moved=true; }
+      if (keysDown['e']) { v.camTarget.y+=speed; moved=true; }
+      if (moved) updateOrbit(activeViewerId);
+    }
+  }
+  requestAnimationFrame(camMoveLoop);
+})();
+
+// ============================================================
+// Init
+// ============================================================
+init();
+</script>
+</body>
+</html>
