@@ -1,6 +1,94 @@
 {
   "real_robot": [
     {
+      "id": "real_robot__bedroom_v1__ball_basket__MolmoBot-Img__1",
+      "benchmark": "bedroom_v1",
+      "task": "ball_basket",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "bedroom_v1/ball_basket",
+      "text": "white and brown plastic container",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__ball_basket__MolmoBot-Img__3",
+      "benchmark": "bedroom_v1",
+      "task": "ball_basket",
+      "policy": "MolmoBot-Img",
+      "trial": "3",
+      "group": "bedroom_v1/ball_basket",
+      "text": "green apple",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot-Img__3.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot-Img__3.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__ball_basket__MolmoBot__1",
+      "benchmark": "bedroom_v1",
+      "task": "ball_basket",
+      "policy": "MolmoBot",
+      "trial": "1",
+      "group": "bedroom_v1/ball_basket",
+      "text": "green apple",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__ball_basket__MolmoBot__2",
+      "benchmark": "bedroom_v1",
+      "task": "ball_basket",
+      "policy": "MolmoBot",
+      "trial": "2",
+      "group": "bedroom_v1/ball_basket",
+      "text": "ball basket",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot__2.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__ball_towel__MolmoBot__2",
+      "benchmark": "bedroom_v1",
+      "task": "ball_towel",
+      "policy": "MolmoBot",
+      "trial": "2",
+      "group": "bedroom_v1/ball_towel",
+      "text": "ball towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot__2.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__ball_towel__MolmoBot__3",
+      "benchmark": "bedroom_v1",
+      "task": "ball_towel",
+      "policy": "MolmoBot",
+      "trial": "3",
+      "group": "bedroom_v1/ball_towel",
+      "text": "ball towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot__3.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot__3.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_basket__MolmoBot-Img__1",
+      "benchmark": "bedroom_v1",
+      "task": "banana_basket",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "bedroom_v1/banana_basket",
+      "text": "banana basket",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_basket__MolmoBot-Img__2",
+      "benchmark": "bedroom_v1",
+      "task": "banana_basket",
+      "policy": "MolmoBot-Img",
+      "trial": "2",
+      "group": "bedroom_v1/banana_basket",
+      "text": "banana basket",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__2.json"
+    },
+    {
       "id": "real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1",
       "benchmark": "robomolmo_princeton",
       "task": "banana_plate",
