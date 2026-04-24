@@ -1,6 +1,28 @@
 {
   "real_robot": [
     {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1_f0090-f0140",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "1_f0090-f0140",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1_f0090-f0140.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1_f0090-f0140.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0072-f0130",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "2_f0072-f0130",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0072-f0130.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0072-f0130.json"
+    },
+    {
       "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0073-f0132",
       "benchmark": "kitchen_v3",
       "task": "apple_easy",
@@ -10,6 +32,116 @@
       "text": "apple easy",
       "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0073-f0132.mp4",
       "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2_f0073-f0132.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__3_f0072-f0130",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "3_f0072-f0130",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__3_f0072-f0130.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__3_f0072-f0130.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__1_f0060-f0100",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Pi0",
+      "trial": "1_f0060-f0100",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__1_f0060-f0100.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__1_f0060-f0100.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__2_f0260-f0300",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Pi0",
+      "trial": "2_f0260-f0300",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__2_f0260-f0300.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Pi0__2_f0260-f0300.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot__2_f0100-f0150",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot",
+      "trial": "2_f0100-f0150",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot__2_f0100-f0150.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot__2_f0100-f0150.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_hard__MolmoBot-Pi0__2_f0060-f0100",
+      "benchmark": "kitchen_v3",
+      "task": "apple_hard",
+      "policy": "MolmoBot-Pi0",
+      "trial": "2_f0060-f0100",
+      "group": "kitchen_v3/apple_hard",
+      "text": "apple hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot-Pi0__2_f0060-f0100.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot-Pi0__2_f0060-f0100.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_hard__MolmoBot__1_f0305-f0355",
+      "benchmark": "kitchen_v3",
+      "task": "apple_hard",
+      "policy": "MolmoBot",
+      "trial": "1_f0305-f0355",
+      "group": "kitchen_v3/apple_hard",
+      "text": "apple hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot__1_f0305-f0355.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot__1_f0305-f0355.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_hard__MolmoBot__3_f0170-f0220",
+      "benchmark": "kitchen_v3",
+      "task": "apple_hard",
+      "policy": "MolmoBot",
+      "trial": "3_f0170-f0220",
+      "group": "kitchen_v3/apple_hard",
+      "text": "apple hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot__3_f0170-f0220.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_hard__MolmoBot__3_f0170-f0220.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__banana_easy__MolmoBot__1_f0090-f0143",
+      "benchmark": "kitchen_v3",
+      "task": "banana_easy",
+      "policy": "MolmoBot",
+      "trial": "1_f0090-f0143",
+      "group": "kitchen_v3/banana_easy",
+      "text": "banana easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__banana_easy__MolmoBot__1_f0090-f0143.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__banana_easy__MolmoBot__1_f0090-f0143.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__banana_easy__MolmoBot__2_f0430-f0500",
+      "benchmark": "kitchen_v3",
+      "task": "banana_easy",
+      "policy": "MolmoBot",
+      "trial": "2_f0430-f0500",
+      "group": "kitchen_v3/banana_easy",
+      "text": "banana easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__banana_easy__MolmoBot__2_f0430-f0500.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__banana_easy__MolmoBot__2_f0430-f0500.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__banana_hard__MolmoBot__3_f0105-f0150",
+      "benchmark": "kitchen_v3",
+      "task": "banana_hard",
+      "policy": "MolmoBot",
+      "trial": "3_f0105-f0150",
+      "group": "kitchen_v3/banana_hard",
+      "text": "banana hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__banana_hard__MolmoBot__3_f0105-f0150.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__banana_hard__MolmoBot__3_f0105-f0150.json"
     }
   ]
 }
