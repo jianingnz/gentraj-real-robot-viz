@@ -45,6 +45,17 @@
       "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_basket__MolmoBot__2.json"
     },
     {
+      "id": "real_robot__bedroom_v1__ball_towel__MolmoBot-Img__1",
+      "benchmark": "bedroom_v1",
+      "task": "ball_towel",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "bedroom_v1/ball_towel",
+      "text": "ball towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__ball_towel__MolmoBot-Img__1.json"
+    },
+    {
       "id": "real_robot__bedroom_v1__ball_towel__MolmoBot__2",
       "benchmark": "bedroom_v1",
       "task": "ball_towel",
@@ -87,6 +98,94 @@
       "text": "banana basket",
       "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__2.mp4",
       "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_basket__MolmoBot-Img__2.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_towel__MolmoBot__1",
+      "benchmark": "bedroom_v1",
+      "task": "banana_towel",
+      "policy": "MolmoBot",
+      "trial": "1",
+      "group": "bedroom_v1/banana_towel",
+      "text": "banana towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_towel__MolmoBot__2",
+      "benchmark": "bedroom_v1",
+      "task": "banana_towel",
+      "policy": "MolmoBot",
+      "trial": "2",
+      "group": "bedroom_v1/banana_towel",
+      "text": "banana towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__2.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_towel__MolmoBot__3",
+      "benchmark": "bedroom_v1",
+      "task": "banana_towel",
+      "policy": "MolmoBot",
+      "trial": "3",
+      "group": "bedroom_v1/banana_towel",
+      "text": "banana towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__3.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_towel__MolmoBot__3.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__banana_towel__pi05-DROID__3",
+      "benchmark": "bedroom_v1",
+      "task": "banana_towel",
+      "policy": "pi05-DROID",
+      "trial": "3",
+      "group": "bedroom_v1/banana_towel",
+      "text": "banana towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__banana_towel__pi05-DROID__3.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__banana_towel__pi05-DROID__3.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__1",
+      "benchmark": "bedroom_v1",
+      "task": "clutter_towel",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "bedroom_v1/clutter_towel",
+      "text": "clutter towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__2",
+      "benchmark": "bedroom_v1",
+      "task": "clutter_towel",
+      "policy": "MolmoBot-Img",
+      "trial": "2",
+      "group": "bedroom_v1/clutter_towel",
+      "text": "clutter towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__clutter_towel__MolmoBot-Img__2.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__pills_towel__MolmoBot-Pi0__1",
+      "benchmark": "bedroom_v1",
+      "task": "pills_towel",
+      "policy": "MolmoBot-Pi0",
+      "trial": "1",
+      "group": "bedroom_v1/pills_towel",
+      "text": "pills towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__pills_towel__MolmoBot-Pi0__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__pills_towel__MolmoBot-Pi0__1.json"
+    },
+    {
+      "id": "real_robot__bedroom_v1__roller_towel__MolmoBot__1",
+      "benchmark": "bedroom_v1",
+      "task": "roller_towel",
+      "policy": "MolmoBot",
+      "trial": "1",
+      "group": "bedroom_v1/roller_towel",
+      "text": "roller towel",
+      "rgb_url": "videos/real_robot/real_robot__bedroom_v1__roller_towel__MolmoBot__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__bedroom_v1__roller_towel__MolmoBot__1.json"
     },
     {
       "id": "real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1",
