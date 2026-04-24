@@ -188,6 +188,28 @@
       "data_url": "static/data/real_robot/real_robot__bedroom_v1__roller_towel__MolmoBot__1.json"
     },
     {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "1",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2",
+      "benchmark": "kitchen_v3",
+      "task": "apple_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "2",
+      "group": "kitchen_v3/apple_easy",
+      "text": "apple easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__apple_easy__MolmoBot-Img__2.json"
+    },
+    {
       "id": "real_robot__robomolmo_princeton__banana_plate__MolmoBot-Img__1",
       "benchmark": "robomolmo_princeton",
       "task": "banana_plate",
@@ -208,6 +230,28 @@
       "text": "blue ceramic coffee mug",
       "rgb_url": "videos/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__1.mp4",
       "data_url": "static/data/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__1.json"
+    },
+    {
+      "id": "real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__2",
+      "benchmark": "workroom_v1",
+      "task": "blue_mug_box",
+      "policy": "MolmoBot-Img",
+      "trial": "2",
+      "group": "workroom_v1/blue_mug_box",
+      "text": "blue mug box",
+      "rgb_url": "videos/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__2.mp4",
+      "data_url": "static/data/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Img__2.json"
+    },
+    {
+      "id": "real_robot__workroom_v1__blue_mug_box__MolmoBot-Pi0__1",
+      "benchmark": "workroom_v1",
+      "task": "blue_mug_box",
+      "policy": "MolmoBot-Pi0",
+      "trial": "1",
+      "group": "workroom_v1/blue_mug_box",
+      "text": "blue mug box",
+      "rgb_url": "videos/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Pi0__1.mp4",
+      "data_url": "static/data/real_robot/real_robot__workroom_v1__blue_mug_box__MolmoBot-Pi0__1.json"
     }
   ]
 }
