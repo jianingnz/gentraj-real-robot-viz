@@ -142,6 +142,83 @@
       "text": "banana hard",
       "rgb_url": "videos/real_robot/real_robot__kitchen_v3__banana_hard__MolmoBot__3_f0105-f0150.mp4",
       "data_url": "static/data/real_robot/real_robot__kitchen_v3__banana_hard__MolmoBot__3_f0105-f0150.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__clutter_black__MolmoBot-Img__2_f0180-f0230",
+      "benchmark": "kitchen_v3",
+      "task": "clutter_black",
+      "policy": "MolmoBot-Img",
+      "trial": "2_f0180-f0230",
+      "group": "kitchen_v3/clutter_black",
+      "text": "clutter black",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__clutter_black__MolmoBot-Img__2_f0180-f0230.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__clutter_black__MolmoBot-Img__2_f0180-f0230.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__clutter_black__pi05-DROID__1_f0160-f0200",
+      "benchmark": "kitchen_v3",
+      "task": "clutter_black",
+      "policy": "pi05-DROID",
+      "trial": "1_f0160-f0200",
+      "group": "kitchen_v3/clutter_black",
+      "text": "clutter black",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__clutter_black__pi05-DROID__1_f0160-f0200.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__clutter_black__pi05-DROID__1_f0160-f0200.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__1_f0160-f0200",
+      "benchmark": "kitchen_v3",
+      "task": "clutter_brown",
+      "policy": "MolmoBot-Img",
+      "trial": "1_f0160-f0200",
+      "group": "kitchen_v3/clutter_brown",
+      "text": "clutter brown",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__1_f0160-f0200.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__1_f0160-f0200.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__2_f0080-f0120",
+      "benchmark": "kitchen_v3",
+      "task": "clutter_brown",
+      "policy": "MolmoBot-Img",
+      "trial": "2_f0080-f0120",
+      "group": "kitchen_v3/clutter_brown",
+      "text": "clutter brown",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__2_f0080-f0120.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__clutter_brown__MolmoBot-Img__2_f0080-f0120.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__mouse_easy__MolmoBot-Img__3_f0085-f0130",
+      "benchmark": "kitchen_v3",
+      "task": "mouse_easy",
+      "policy": "MolmoBot-Img",
+      "trial": "3_f0085-f0130",
+      "group": "kitchen_v3/mouse_easy",
+      "text": "mouse easy",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__mouse_easy__MolmoBot-Img__3_f0085-f0130.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__mouse_easy__MolmoBot-Img__3_f0085-f0130.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__mouse_hard__MolmoBot-Pi0__1_f0130-f0200",
+      "benchmark": "kitchen_v3",
+      "task": "mouse_hard",
+      "policy": "MolmoBot-Pi0",
+      "trial": "1_f0130-f0200",
+      "group": "kitchen_v3/mouse_hard",
+      "text": "mouse hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__mouse_hard__MolmoBot-Pi0__1_f0130-f0200.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__mouse_hard__MolmoBot-Pi0__1_f0130-f0200.json"
+    },
+    {
+      "id": "real_robot__kitchen_v3__mug_hard__MolmoBot-Img__2_f0095-f0130",
+      "benchmark": "kitchen_v3",
+      "task": "mug_hard",
+      "policy": "MolmoBot-Img",
+      "trial": "2_f0095-f0130",
+      "group": "kitchen_v3/mug_hard",
+      "text": "mug hard",
+      "rgb_url": "videos/real_robot/real_robot__kitchen_v3__mug_hard__MolmoBot-Img__2_f0095-f0130.mp4",
+      "data_url": "static/data/real_robot/real_robot__kitchen_v3__mug_hard__MolmoBot-Img__2_f0095-f0130.json"
     }
   ]
 }
